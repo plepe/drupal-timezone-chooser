@@ -19,8 +19,10 @@ class TimezoneChooser extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $user = \Drupal::currentUser();
+
     return [
-      '#markup' => $this->t('Hello, World!'),
+      '#markup' => $user->getTimeZone() ?: date_default_timezone_get(),
     ];
   }
 
