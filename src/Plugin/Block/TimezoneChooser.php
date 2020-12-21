@@ -21,12 +21,30 @@ class TimezoneChooser extends BlockBase {
   public function build() {
     $user = \Drupal::currentUser();
 
-    return [
-      '#markup' => 'All dates in <span id="timezone_chooser" data-userid="' . $user->id() . '">' . $user->getTimeZone() . '</span>' ?: date_default_timezone_get(),
-      '#cache' => [
-        'contexts' => [ 'timezone' ],
-      ],
-      '#attached' => ['library' => ['timezone_chooser/base']],
-    ];
+    if ($user->getTimeZone()) {
+      $current_timezone = $user->getTimeZone();
+
+      $options = array();
+      foreach (system_time_zones() as $timezone) {
+        $options[] = "<option" . ($timezone == $current_timezone ? " selected" : "") . ">{$timezone}</option>";
+      }
+
+      return [
+        '#markup' => 'All dates in <select id="timezone_chooser" data-userid="' . $user->id() . '">' . implode("\n", $options) . '</select>' ?: date_default_timezone_get(),
+        '#allowed_tags' => ['select', 'option'],
+        '#cache' => [
+          'contexts' => [ 'timezone' ],
+        ],
+        '#attached' => ['library' => ['timezone_chooser/base']],
+      ];
+    }
+    else {
+      return [
+        '#markup' => 'All dates in ' . date_default_timezone_get(),
+        '#cache' => [
+          'contexts' => [ 'timezone' ],
+        ],
+      ];
+    }
   }
 }
