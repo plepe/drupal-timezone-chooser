@@ -22,8 +22,12 @@ class TimezoneChooser extends BlockBase {
     $user = \Drupal::currentUser();
 
     return [
-      '#markup' => $user->getTimeZone() ?: date_default_timezone_get(),
+      '#markup' => $this->t('All dates in timezone @timezone.', array(
+        '@timezone' => $user->getTimeZone() ?: date_default_timezone_get()
+      )),
+      '#cache' => [
+        'contexts' => [ 'timezone' ],
+      ],
     ];
   }
-
 }
