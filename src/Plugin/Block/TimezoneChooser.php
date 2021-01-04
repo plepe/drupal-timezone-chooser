@@ -33,7 +33,7 @@ class TimezoneChooser extends BlockBase {
         '#markup' => 'All dates in <select id="timezone_chooser" data-userid="' . $user->id() . '">' . implode("\n", $options) . '</select>' ?: date_default_timezone_get(),
         '#allowed_tags' => ['select', 'option'],
         '#cache' => [
-          'contexts' => [ 'timezone' ],
+          'contexts' => [ 'timezone', 'user' ],
         ],
         '#attached' => ['library' => ['timezone_chooser/base']],
       ];
