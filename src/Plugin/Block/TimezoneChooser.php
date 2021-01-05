@@ -26,7 +26,8 @@ class TimezoneChooser extends BlockBase {
 
       $options = array();
       foreach (system_time_zones() as $timezone) {
-        $options[] = "<option" . ($timezone == $current_timezone ? " selected" : "") . ">{$timezone}</option>";
+        $timezone_esc = strtr($timezone, [' ' => '_']);
+        $options[] = "<option value=\"{$timezone_esc}\" " . ($timezone_esc == $current_timezone ? " selected" : "") . ">{$timezone}</option>";
       }
 
       return [
