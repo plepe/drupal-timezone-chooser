@@ -11,7 +11,13 @@ window.setTimeout(() => {
     }
 
     fetch(Drupal.url('rest/session/token'))
-      .then(data => data.text())
+      .then(response => {
+        if (response.ok) {
+          return response.text()
+        } else {
+          throw Error("Can't get session token: " + response.statusText)
+        }
+      })
       .then(token => {
         fetch(Drupal.url('user/' + userid + '?_format=json'), {
           method: 'PATCH',
@@ -23,9 +29,15 @@ window.setTimeout(() => {
             timezone: [{value: timezone_chooser.value }]
           })
         })
-          .then(data => {
-            location.reload()
+          .then(response => {
+            if (response.ok) {
+              location.reload()
+            } else {
+              throw Error("Can't change timezone: " + response.statusText)
+            }
           })
+          .catch(error => alert(error))
       })
+      .catch(error => alert(error))
   }
 }, 0)
